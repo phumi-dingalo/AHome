@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fairytale Home 🌸🏡</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&display=swap');
+
+  body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'Mountains of Christmas', cursive;
+    position: relative;
+    background: url('garden-bg.jpg') no-repeat center center/cover;
+  }
+
+  /* Silhouette */
+  .silhouette {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 120px;
+    height: 120px;
+    background: url('silhouette.png') no-repeat center/contain;
+  }
+
+  /* House parts */
+  .house-part {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+  }
+
+  .roof { background: url('roof.png') no-repeat center/contain; width: 100px; height: 60px; }
+  .door { background: url('door.png') no-repeat center/contain; width: 60px; height: 80px; }
+  .window { background: url('window.png') no-repeat center/contain; width: 50px; height: 50px; }
+  .wall { background: url('wall.png') no-repeat center/contain; width: 80px; height: 60px; }
+
+  /* Message */
+  .message {
+    position: absolute;
+    top: 40%;
+    font-size: 2rem;
+    text-align: center;
+    opacity: 0;
+    color: #fff;
+    text-shadow: 2px 2px 5px #000;
+    transition: opacity 1s, transform 0.5s;
+  }
+
+  .show {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+
+  /* Sparkles */
+  .sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    animation: sparkle 1s ease-out forwards;
+  }
+
+  @keyframes sparkle {
+    from {opacity: 1; transform: scale(1);}
+    to {opacity: 0; transform: scale(2);}
+  }
+
+  /* Floating petals */
+  .petal {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: pink;
+    border-radius: 50%;
+    animation: float 10s linear infinite;
+  }
+
+  @keyframes float {
+    from {transform: translateY(100vh) rotate(0deg);}
+    to {transform: translateY(-10vh) rotate(360deg);}
+  }
+</style>
+</head>
+<body>
+
+<div class="silhouette"></div>
+
+<div id="roof" class="house-part roof"></div>
+<div id="door" class="house-part door"></div>
+<div id="window1" class="house-part window"></div>
+<div id="window2" class="house-part window"></div>
+<div id="wall1" class="house-part wall"></div>
+<div id="wall2" class="house-part wall"></div>
+
+<div class="message" id="message">Will you build a home with me? 🏡💖</div>
+
+<script>
+const parts = document.querySelectorAll('.house-part');
+const message = document.getElementById('message');
+let caught = 0;
+
+// Random start positions
+parts.forEach(part => {
+  part.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+  part.style.top = -100 + 'px';
+});
+
+// Make parts fall
+function fall() {
+  parts.forEach(part => {
+    if (!part.caught) {
+      let top = parseFloat(part.style.top);
+      top += 2 + Math.random() * 2;
+      if (top > window.innerHeight) top = -100;
+      part.style.top = top + 'px';
+    }
+  });
+  requestAnimationFrame(fall);
+}
+fall();
+
+// Catch parts on click
+parts.forEach(part => {
+  part.addEventListener('click', () => {
+    if (!part.caught) {
+      part.caught = true;
+      part.style.display = 'none';
+      createSparkles(part);
+      caught++;
+      if (caught === parts.length) {
+        message.classList.add('show');
+      }
+    }
+  });
+});
+
+// Sparkles
+function createSparkles(el) {
+  for (let i = 0; i < 20; i++) {
+    const s = document.createElement('div');
+    s.classList.add('sparkle');
+    s.style.left = (parseFloat(el.style.left) + Math.random() * 80) + 'px';
+    s.style.top = (parseFloat(el.style.top) + Math.random() * 80) + 'px';
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 1500);
+  }
+}
+
+// Floating petals
+for (let i = 0; i < 50; i++) {
+  const p = document.createElement('div');
+  p.classList.add('petal');
+  p.style.left = Math.random() * 100 + 'vw';
+  p.style.animationDelay = Math.random() * 10 + 's';
+  p.style.animationDuration = 8 + Math.random() * 5 + 's';
+  document.body.appendChild(p);
+}
+</script>
+
+</body>
+</html>
